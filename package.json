@@ -1,5 +1,5 @@
 {
-  "name": "copy-of-real-time-audio-transcription",
+  "name": "real-time-audio-transcription",
   "private": true,
   "version": "0.0.0",
   "type": "module",
