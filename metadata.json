@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Real-time Audio Transcription",
+  "description": "A web application that transcribes your speech in real-time using your device's microphone and the Web Speech API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
