@@ -1,5 +1,5 @@
 {
-  "name": "real-time-audio-transcription",
+  "name": "transcricao-de-audio-em-tempo-real",
   "private": true,
   "version": "0.0.0",
   "type": "module",
