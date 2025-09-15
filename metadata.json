@@ -1,5 +1,5 @@
 {
-  "name": "Transcricao de audio em tempo real",
+  "name": "Verificação de fatos em tempo real",
   "description": "A web application that transcribes your speech in real-time using your device's microphone and the Web Speech API.",
   "requestFramePermissions": [
     "microphone"
