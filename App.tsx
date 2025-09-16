@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GoogleGenAI } from "@google/genai";
 
@@ -48,18 +50,6 @@ const MicrophoneIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const CopyIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-  </svg>
-);
-
-const TrashIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-  </svg>
-);
-
 const SpinnerIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
@@ -94,6 +84,12 @@ const LinkIcon: React.FC<{ className?: string }> = ({ className }) => (
     </svg>
 );
 
+const EllipsisIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M6 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+    </svg>
+);
+
 // --- Translations ---
 type Translation = {
   title: string;
@@ -102,9 +98,9 @@ type Translation = {
   selectTranscriptionLanguage: string;
   transcriptPlaceholder: string;
   statusListening: string;
-  statusDetecting: string;
   statusInitializing: string;
   statusReady: string;
+  statusWaiting: string;
   clearTranscript: string;
   copyTranscript: string;
   analysisHistory: string;
@@ -130,9 +126,9 @@ const enUSTranslation: Translation = {
   selectTranscriptionLanguage: 'Select transcription language',
   transcriptPlaceholder: 'Transcript will appear here...',
   statusListening: 'Listening...',
-  statusDetecting: 'Sound detected...',
   statusInitializing: 'Initializing microphone...',
   statusReady: 'Ready to listen',
+  statusWaiting: 'Waiting for statement to end...',
   clearTranscript: 'Clear transcript',
   copyTranscript: 'Copy transcript',
   analysisHistory: 'Analysis History',
@@ -156,9 +152,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Seleccionar idioma de transcripción',
     transcriptPlaceholder: 'La transcripción aparecerá aquí...',
     statusListening: 'Escuchando...',
-    statusDetecting: 'Sonido detectado...',
     statusInitializing: 'Inicializando micrófono...',
     statusReady: 'Listo para escuchar',
+    statusWaiting: 'Esperando a que termine la declaración...',
     clearTranscript: 'Limpiar transcripción',
     copyTranscript: 'Copiar transcripción',
     analysisHistory: 'Historial de análisis',
@@ -179,9 +175,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Sélectionner la langue de transcription',
     transcriptPlaceholder: 'La transcription apparaîtra ici...',
     statusListening: 'Écoute en cours...',
-    statusDetecting: 'Son détecté...',
     statusInitializing: 'Initialisation du microphone...',
     statusReady: 'Prêt à écouter',
+    statusWaiting: 'En attente de la fin de la déclaration...',
     clearTranscript: 'Effacer la transcription',
     copyTranscript: 'Copier la transcription',
     analysisHistory: 'Historique des analyses',
@@ -202,9 +198,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Transkriptionssprache auswählen',
     transcriptPlaceholder: 'Transkript wird hier erscheinen...',
     statusListening: 'Höre zu...',
-    statusDetecting: 'Geräusch erkannt...',
     statusInitializing: 'Mikrofon wird initialisiert...',
     statusReady: 'Bereit zum Zuhören',
+    statusWaiting: 'Warte auf das Ende der Aussage...',
     clearTranscript: 'Transkript löschen',
     copyTranscript: 'Transkript kopieren',
     analysisHistory: 'Analyse-Verlauf',
@@ -225,9 +221,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Seleziona la lingua di trascrizione',
     transcriptPlaceholder: 'La trascrizione apparirà qui...',
     statusListening: 'In ascolto...',
-    statusDetecting: 'Suono rilevato...',
     statusInitializing: 'Inizializzazione del microfono...',
     statusReady: 'Pronto per l\'ascolto',
+    statusWaiting: 'In attesa della fine della dichiarazione...',
     clearTranscript: 'Cancella trascrizione',
     copyTranscript: 'Copia trascrizione',
     analysisHistory: 'Cronologia analisi',
@@ -248,9 +244,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: '文字起こしの言語を選択',
     transcriptPlaceholder: 'ここに文字起こしが表示されます...',
     statusListening: '聞き取り中...',
-    statusDetecting: '音声を検出しました...',
     statusInitializing: 'マイクを初期化しています...',
     statusReady: '聞き取り準備完了',
+    statusWaiting: '発言の終了を待っています...',
     clearTranscript: '文字起こしをクリア',
     copyTranscript: '文字起こしをコピー',
     analysisHistory: '分析履歴',
@@ -266,14 +262,14 @@ const translations: Record<string, Translation> = {
   },
   'ko-KR': { 
     title: '실시간 팩트 체크',
-    subtitle: '당신의 말을 즉시 포착하고 사실을 확인합니다.',
+    subtitle: '당신의 말을 즉시 포착하고 사실을 확인합니다。',
     selectLanguage: '언어 선택',
     selectTranscriptionLanguage: '음성 인식 언어 선택',
     transcriptPlaceholder: '여기에 녹취록이 표시됩니다...',
     statusListening: '듣는 중...',
-    statusDetecting: '소리 감지됨...',
     statusInitializing: '마이크 초기화 중...',
     statusReady: '들을 준비 완료',
+    statusWaiting: '문장이 끝나기를 기다리는 중...',
     clearTranscript: '녹취록 지우기',
     copyTranscript: '녹취록 복사하기',
     analysisHistory: '분석 기록',
@@ -294,9 +290,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Selecionar idioma da transcrição',
     transcriptPlaceholder: 'A transcrição aparecerá aqui...',
     statusListening: 'Ouvindo...',
-    statusDetecting: 'Som detectado...',
     statusInitializing: 'Inicializando microfone...',
     statusReady: 'Pronto para ouvir',
+    statusWaiting: 'Aguardando o final da declaração...',
     clearTranscript: 'Limpar transcrição',
     copyTranscript: 'Copiar transcrição',
     analysisHistory: 'Histórico de Análises',
@@ -317,9 +313,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'Выберите язык транскрипции',
     transcriptPlaceholder: 'Транскрипция появится здесь...',
     statusListening: 'Слушаю...',
-    statusDetecting: 'Обнаружен звук...',
     statusInitializing: 'Инициализация микрофона...',
     statusReady: 'Готов к прослушиванию',
+    statusWaiting: 'Ожидание окончания высказывания...',
     clearTranscript: 'Очистить транскрипцию',
     copyTranscript: 'Копировать транскрипцию',
     analysisHistory: 'История анализов',
@@ -340,9 +336,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: '选择转录语言',
     transcriptPlaceholder: '转录内容将显示在此处...',
     statusListening: '正在聆听...',
-    statusDetecting: '检测到声音...',
     statusInitializing: '正在初始化麦克风...',
     statusReady: '准备聆听',
+    statusWaiting: '正在等待语句结束...',
     clearTranscript: '清除转录',
     copyTranscript: '复制转录',
     analysisHistory: '分析历史',
@@ -363,9 +359,9 @@ const translations: Record<string, Translation> = {
     selectTranscriptionLanguage: 'ट्रांसक्रिप्शन भाषा चुनें',
     transcriptPlaceholder: 'ट्रांसक्रिप्ट यहाँ दिखाई देगी...',
     statusListening: 'सुन रहा है...',
-    statusDetecting: 'आवाज का पता चला...',
     statusInitializing: 'माइक्रोफ़ोन प्रारंभ हो रहा है...',
     statusReady: 'सुनने के लिए तैयार',
+    statusWaiting: 'कथन समाप्त होने की प्रतीक्षा में...',
     clearTranscript: 'ट्रांसक्रिप्ट साफ़ करें',
     copyTranscript: 'ट्रांसक्रिप्ट कॉपी करें',
     analysisHistory: 'विश्लेषण इतिहास',
@@ -387,7 +383,7 @@ const LANGUAGES = [
 ];
 
 const CONFIDENCE_THRESHOLD = 0.5;
-type Status = 'idle' | 'listening' | 'error' | 'initializing' | 'detecting';
+type Status = 'idle' | 'listening' | 'error' | 'initializing' | 'waiting_for_end';
 
 // --- Main App Component ---
 export default function App() {
@@ -396,15 +392,11 @@ export default function App() {
   const [transcript, setTranscript] = useState('');
   const [language, setLanguage] = useState('en-US');
   const [error, setError] = useState<string | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const stopTimerRef = useRef<number | null>(null);
   const transcriptContainerRef = useRef<HTMLDivElement>(null);
-
-  const transcriptRef = useRef(transcript);
-  useEffect(() => { transcriptRef.current = transcript; }, [transcript]);
 
   const errorRef = useRef(error);
   useEffect(() => { errorRef.current = error; }, [error]);
@@ -474,7 +466,6 @@ export default function App() {
     
     recognition.onend = () => {
         if (errorRef.current) { setStatus('error'); return; }
-        // The check below ensures we don't restart recognition if the component unmounted.
         if (recognitionRef.current) {
           recognitionRef.current?.start();
         }
@@ -491,22 +482,21 @@ export default function App() {
     };
     
     recognition.onspeechstart = () => {
-        if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
-        stopTimerRef.current = null;
-        setStatus('detecting');
+        if (stopTimerRef.current) {
+          clearTimeout(stopTimerRef.current);
+          stopTimerRef.current = null;
+        }
     };
 
     recognition.onspeechend = () => {
         setIsSpeaking(false);
-        setStatus('idle');
-        if (!stopTimerRef.current) {
-            stopTimerRef.current = window.setTimeout(() => { recognitionRef.current?.stop(); }, 1000);
-        }
     };
 
     recognition.onresult = (event: any) => {
-        if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
-        stopTimerRef.current = null;
+        if (stopTimerRef.current) {
+            clearTimeout(stopTimerRef.current);
+            stopTimerRef.current = null;
+        }
         setIsSpeaking(true);
         setStatus('listening');
         
@@ -514,18 +504,22 @@ export default function App() {
         let interimTranscript = '';
         for (let i = 0; i < event.results.length; ++i) {
             const result = event.results[i];
-            if (result.isFinal && result[0].confidence > CONFIDENCE_THRESHOLD) {
-                finalTranscript += result[0].transcript;
+            if (result.isFinal) {
+                if (result[0].confidence > CONFIDENCE_THRESHOLD) {
+                    finalTranscript += result[0].transcript;
+                }
             } else {
                 interimTranscript += result[0].transcript;
             }
         }
-        setTranscript(finalTranscript + interimTranscript);
+        const currentTranscript = finalTranscript + interimTranscript;
+        setTranscript(currentTranscript);
         
         const isLastResultFinal = event.results[event.results.length - 1].isFinal;
         if (isLastResultFinal) {
+            setStatus('waiting_for_end');
             stopTimerRef.current = window.setTimeout(() => {
-                const finalTranscriptText = (finalTranscript + interimTranscript).trim();
+                const finalTranscriptText = currentTranscript.trim();
                 if (finalTranscriptText) {
                     const newSessionId = Date.now();
                     const newSession: Session = { id: newSessionId, transcript: finalTranscriptText, status: 'pending' };
@@ -534,14 +528,14 @@ export default function App() {
                 }
                 setTranscript('');
                 recognitionRef.current?.stop();
-            }, 1000);
+            }, 1500);
         }
     };
 
     recognition.start();
 
     return () => {
-      recognitionRef.current = null; // Prevent onend from restarting
+      recognitionRef.current = null; 
       recognition.onend = null;
       recognition.stop();
     };
@@ -553,16 +547,6 @@ export default function App() {
     }
   }, [transcript]);
 
-  const handleCopy = useCallback(() => {
-    if (transcript) {
-      navigator.clipboard.writeText(transcript);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    }
-  }, [transcript]);
-
-  const handleClear = useCallback(() => { setTranscript(''); }, []);
-  
   const StatusIndicator = () => {
     if (status === 'error') return <div className="text-red-400 font-medium text-center">{error}</div>;
     if (status === 'listening') {
@@ -573,7 +557,14 @@ export default function App() {
           </div>
         );
     }
-    if (status === 'detecting') return <div className="text-slate-400 font-medium text-center">{t.statusDetecting}</div>;
+    if (status === 'waiting_for_end') {
+        return (
+            <div className="text-slate-400 font-medium text-center flex items-center justify-center gap-2">
+                <EllipsisIcon className="w-6 h-6 animate-pulse" />
+                {t.statusWaiting}
+            </div>
+        );
+    }
     if (status === 'initializing') return <div className="text-slate-400 font-medium text-center">{t.statusInitializing}</div>;
     return <div className="text-slate-400 font-medium text-center flex items-center justify-center gap-2"><MicrophoneIcon className="w-5 h-5" /> {t.statusReady}</div>;
   };
@@ -630,7 +621,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center p-4 sm:p-6 lg:p-8 font-sans">
-      <div className="w-full max-w-4xl mx-auto flex flex-col h-[90vh]">
+      <div className="w-full max-w-7xl mx-auto flex flex-col h-[90vh]">
         <header className="text-center mb-6 flex-shrink-0">
           <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">{t.title}</h1>
           <p className="text-slate-400 mt-2 text-lg">{t.subtitle}</p>
@@ -642,47 +633,42 @@ export default function App() {
                 onChange={(e) => setLanguage(e.target.value)}
                 className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 aria-label={t.selectTranscriptionLanguage}
-                disabled={status === 'listening' || status === 'detecting'}
+                disabled={status === 'listening'}
             >
                 {LANGUAGES.map(lang => <option key={lang.code} value={lang.code}>{lang.name}</option>)}
             </select>
           </div>
         </header>
 
-        <div ref={transcriptContainerRef} className={`flex-grow bg-slate-800/50 rounded-lg shadow-inner p-6 overflow-y-auto transition-all duration-300 min-h-24 ${isSpeaking ? 'ring-2 ring-cyan-500' : 'ring-1 ring-slate-700/50'}`}>
-          <p className="text-lg sm:text-xl leading-relaxed whitespace-pre-wrap">
-            {transcript || <span className="text-slate-500">{t.transcriptPlaceholder}</span>}
-          </p>
-        </div>
+        <div className="flex-shrink-0 text-center mb-6 h-6"><StatusIndicator /></div>
         
-        <div className="flex-shrink-0 pt-6">
-          <div className="text-center mb-6 h-6"><StatusIndicator /></div>
-          <div className="flex items-center justify-center gap-4">
-             <button onClick={handleClear} disabled={!transcript} className="p-3 rounded-full bg-slate-700 text-slate-300 hover:bg-slate-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500" aria-label={t.clearTranscript}>
-                <TrashIcon className="w-6 h-6" />
-            </button>
-             <button onClick={handleCopy} disabled={!transcript} className="p-4 rounded-full bg-slate-700 text-slate-300 hover:bg-slate-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-500" aria-label={t.copyTranscript}>
-              {isCopied ? <svg className="w-7 h-7 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> : <CopyIcon className="w-7 h-7" />}
-            </button>
+        <main className="flex-grow flex flex-col md:flex-row gap-6 min-h-0">
+          {/* Left Panel: Transcript */}
+          <div className="w-full md:w-1/2 flex flex-col min-h-0">
+              <div ref={transcriptContainerRef} className={`flex-grow bg-slate-800/50 rounded-lg shadow-inner p-6 overflow-y-auto transition-all duration-300 ${isSpeaking ? 'ring-2 ring-cyan-500' : 'ring-1 ring-slate-700/50'} ${!transcript ? 'flex items-center justify-center' : ''}`}>
+                <p className="text-lg sm:text-xl leading-relaxed whitespace-pre-wrap">
+                  {transcript || <span className="text-slate-500">{t.transcriptPlaceholder}</span>}
+                </p>
+              </div>
           </div>
-        </div>
-
-        <div className="flex-grow mt-8 flex flex-col min-h-0">
-            <h2 className="text-2xl font-bold text-center mb-4 text-white">{t.analysisHistory}</h2>
-            <div className="flex-grow bg-slate-800/50 rounded-lg p-4 space-y-4 overflow-y-auto ring-1 ring-slate-700/50">
-                {sessions.length === 0 ? (
-                    <div className="text-center text-slate-500 h-full flex items-center justify-center">{t.historyPlaceholder}</div>
-                ) : (
-                    sessions.map(session => (
-                        <div key={session.id} className="bg-slate-900/70 p-4 rounded-lg border border-slate-700">
-                            <p className="text-slate-200 text-lg mb-3">"{session.transcript}"</p>
-                            <hr className="border-slate-700 my-3" />
-                            <AnalysisResult session={session} />
-                        </div>
-                    ))
-                )}
-            </div>
-        </div>
+          
+          {/* Right Panel: History */}
+          <div className="w-full md:w-1/2 flex flex-col min-h-0">
+              <div className="flex-grow bg-slate-800/50 rounded-lg p-4 space-y-4 overflow-y-auto ring-1 ring-slate-700/50">
+                  {sessions.length === 0 ? (
+                      <div className="text-center text-slate-500 h-full flex items-center justify-center">{t.historyPlaceholder}</div>
+                  ) : (
+                      sessions.map(session => (
+                          <div key={session.id} className="bg-slate-900/70 p-4 rounded-lg border border-slate-700">
+                              <p className="text-slate-200 text-lg mb-3">"{session.transcript}"</p>
+                              <hr className="border-slate-700 my-3" />
+                              <AnalysisResult session={session} />
+                          </div>
+                      ))
+                  )}
+              </div>
+          </div>
+        </main>
       </div>
     </div>
   );

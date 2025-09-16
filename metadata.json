@@ -1,6 +1,6 @@
 {
-  "name": "Verificação de fatos em tempo real",
-  "description": "A web application that transcribes your speech in real-time using your device's microphone and the Web Speech API.",
+  "name": "Fast Fact-Checking",
+  "description": "Um aplicativo web que transcreve sua fala usando o microfone do seu dispositivo e o Web Speech API para verificar em tempo real a veracidade dos fatos. A web application that transcribes your speech using your device's microphone and the Web Speech API for real time fact-checking.",
   "requestFramePermissions": [
     "microphone"
   ]
